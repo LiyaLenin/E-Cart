@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchProducts } from '../Redux/Slices/productSlice'
 import Spinner from 'react-bootstrap/Spinner';
+import { addToWishlist } from '../Redux/Slices/wishlistSlice'
 
 
 function Home() {
@@ -16,7 +17,7 @@ function Home() {
     <div style={{ marginTop: '60px' }}>
       {
         loading ? <div className='d-flex justify-content-center mt-5'><Spinner className='me-3' animation="border" variant="dark" />Loading....</div> :
-          <Row className='mt-5 container'>
+          <Row style={{marginLeft:'30px'}} className='mt-5 container-fluid'>
             {products.length>0&&products.map((product,index)=>(
             <Col key={index} className='mb-5' sm={12} md={6} lg={4} xl={3}>
               <Card className='shadow rounded' style={{ width: '18rem' }}>
@@ -25,7 +26,7 @@ function Home() {
                   <Card.Title>{product.title.slice(0,20)}...</Card.Title>
 
                   <div className='d-flex justify-content-between'>
-                    <Button className='btn btn-light'><i className="fa-regular fa-heart text-danger "></i></Button>
+                    <Button onClick={()=>dispatch(addToWishlist(product))} className='btn btn-light'><i className="fa-regular fa-heart text-danger "></i></Button>
                     <Button className='btn btn-light'><i className="fa-solid fa-cart-shopping text-success "></i></Button>
 
                   </div>      </Card.Body>
