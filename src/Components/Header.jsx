@@ -1,26 +1,41 @@
+
 import React, { useEffect, useState } from 'react'
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
-import { Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import wishlistSlice from '../Redux/Slices/wishlistSlice';
-wishlistSlice
-function Header() {
-    const [wishlistCount, setwishlistCount] = useState(0)
+import { Badge } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { productSearch } from '../Redux/Slices/productSlice';
+function Header({insideHome}) {
+    const dispatch = useDispatch()
+    const [wishlistCount, setWishlistCount] = useState(0)
+    const [cartCount,setCartCount] = useState(0)
     const wishlist = useSelector(state => state.wishlistSlice.wishlist)
+    const cart = useSelector(state=>state.cartReducer)
     useEffect(() => {
-        setwishlistCount(wishlist.length)
-    }, [wishlist])
+        setWishlistCount(wishlist?.length)
+        setCartCount(cart?.length)
+
+    }, [wishlist,cart])
+
+
     return (
         <div>
             <Navbar expand="lg" className="bg-body-tertiary">
                 <Container>
-                    <Navbar.Brand href="#"><i class="fa-solid fa-truck-fast"></i>E Cart</Navbar.Brand>
-                    <div className='d-flex justify-content-between '>
-                        <Link to={'./wishlist'}><Button className='me-2' variant="primary"><i class="fa-regular fa-heart me-2"></i>Wishlist<Badge className='ms-2 rounded ' bg="secondary " >{wishlistCount}</Badge> </Button>{' '}</Link>
-                        <Link to={'./cart'}> <Button variant="primary"> <i class="fa-solid fa-cart-shopping me-2"></i>Cart<Badge className='ms-2 rounded ' bg="secondary " >10</Badge></Button>{' '}</Link>
+                    <Navbar.Brand><Link to={'/'} style={{ textDecoration: 'none ' }}><i class="fa-solid fa-truck-fast me-2"></i>E Cart</Link></Navbar.Brand>
+                    <div className='d-flex'>
+                      { insideHome&& <nav Link className='me-lg-5'>
+                            <input onChange={e=>dispatch(productSearch(e.target.value.toLowerCase()))} type="text" className='form-control' placeholder='Search Products!!!'/>
+                        </nav>}
+                        <Link to={'/wishlist'} style={{ textDecoration: 'none' }}><Button className='me-3 rounded' variant="outline-primary">
+                            <i class="fa-solid fa-heart me-2"></i>Wishlist <Badge className='ms-2 rounded'>{wishlistCount}</Badge></Button>{' '}</Link>
+
+                        <Link className='me-3' to={'/cart'}><Button className='rounded' variant="outline-primary">
+                            <i class="fa-solid fa-cart-shopping ms-1"></i>Cart
+                            <Badge className='ms-2 rounded'>{cartCount}</Badge></Button></Link>
+
 
                     </div>
                 </Container>
@@ -30,3 +45,4 @@ function Header() {
 }
 
 export default Header
+
